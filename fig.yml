@@ -1,0 +1,51 @@
+# --dns=10.0.1.1 --dns-search=domain.com --name="poweradmin" -p 8053:80 -e DB_HOST=domain.com -e DB_PASS=powersecret -e DNS_NS1=10.0.1.1 sath89/poweradmin
+#docker run --name mysqldb -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=sample -e MYSQL_ROOT_PASSWORD=supersecret -d mysql
+
+powerdnsdata:
+  image: docker-powerdns-mysql-data
+
+powerdnsmysql:
+  image: mysql
+  links:
+    - powerdnsdata
+  environment:
+    - MYSQL_USER=mysql
+    - MYSQL_PASSWORD=mysql
+    - MYSQL_DATABASE=pdns
+    - MYSQL_ROOT_PASSWORD=asdf1234
+  ports:
+    - "3308:3306" 
+
+powerdns:
+  image: powerdns
+  links:
+    - powerdnsmysql:mysql
+#  ports:
+#poweradmin:
+#  image: sath89/poweradmin
+#  links: 
+#    - mysql:mysql
+#    - powerdns:powerdns
+#  environment:
+#    - DB_HOST=
+#    - DB_PASS=
+#    - DNS_NS1=
+#  ports:
+#    - "8020:80"
+
+#postgresql:
+#  image: sameersbn/postgresql:9.1-1
+#  environment:
+#    - DB_USER=gitlab
+#    - DB_PASS=secretpassword
+#    - DB_NAME=gitlabhq_production
+#gitlab:
+# image: sameersbn/gitlab:7.5.3
+#  links:
+#   - redis:redisio
+#   - postgresql:postgresql
+#  ports:
+#   - "10080:80"
+#   - "10022:22"
+#redis:
+#  image: sameersbn/redis:latest
